@@ -3,44 +3,37 @@
 #include <unistd.h>
 #include <vector>
 
-struct arguments
+std::string segments[10] = {
+    "1 1 1 1 1 1 0", //0
+    "0 1 1 0 0 0 0", //1
+    "1 1 0 1 1 0 1", //2
+    "1 1 1 1 0 0 1", //3
+    "0 1 1 0 0 1 1", //4
+    "1 0 1 1 0 1 1", //5
+    "1 0 1 1 1 1 1", //6
+    "1 1 1 0 0 0 0", //7
+    "1 1 1 1 1 1 1", //8
+    "1 1 1 1 0 1 1"  //9
+};
+
+struct arguments // try to make this struct as small as possible, try to only store the index in the segments array
 {
     int digit;
-    int seg[7];
+    std::string seg;
 
     void printOutput()
     {
-        std::cout << digit << " = ";
-        for (int i = 0; i < 7; i++)
-        {
-            std::cout << seg[i];
-            if (i != 6)
-            {
-                std::cout << " ";
-            }
-        }
+        std::cout << digit << " = " << seg << std::endl;
     }
 };
 
 void *myFunction(void *arg_void_ptr)
 {
     struct arguments *arg_ptr = (struct arguments *)arg_void_ptr;
-    int segments[10][7] = {
-        {1, 1, 1, 1, 1, 1, 0}, //0
-        {0, 1, 1, 0, 0, 0, 0}, //1
-        {1, 1, 0, 1, 1, 0, 1}, //2
-        {1, 1, 1, 1, 0, 0, 1}, //3
-        {0, 1, 1, 0, 0, 1, 1}, //4
-        {1, 0, 1, 1, 0, 1, 1}, //5
-        {1, 0, 1, 1, 1, 1, 1}, //6
-        {1, 1, 1, 0, 0, 0, 0}, //7
-        {1, 1, 1, 1, 1, 1, 1}, //8
-        {1, 1, 1, 1, 0, 1, 1}  //9
-    };
 
     for (int i = 0; i < 7; i++)
     {
-        arg_ptr->seg[i] = segments[arg_ptr->digit][i];
+        arg_ptr->seg = segments[arg_ptr->digit];
     }
     return nullptr;
 }
@@ -77,13 +70,10 @@ int main()
     {
         pthread_join(tid[i], nullptr);
     }
+
     for (int i = numLength - 1; i >= 0; i--)
     {
         arg[i].printOutput();
-        if (i != 0)
-        {
-            std::cout << std::endl;
-        }
     }
     return 0;
 };
